@@ -1,0 +1,9 @@
+server:
+  port: 8080
+  read_timeout: 5s
+  write_timeout: 10s
+  idle_timeout: 15s
+
+quiz:
+  max_questions: 10
+  time_limit: 300s

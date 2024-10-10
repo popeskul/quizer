@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  title: Quizer API
+  version: 1.0.0
+  description: This is an API for a Quiz application with additional status check endpoints.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: API Support
+    url: http://www.swagger.io/support
+    email: support@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:8080
+paths:
+  /quiz:
+    get:
+      summary: Get a quiz
+      description: Retrieves a quiz with questions and answers
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quiz'
+  /submit:
+    post:
+      summary: Submit quiz answers
+      description: Submit answers for a quiz and get the result
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizAnswers'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizResult'
+  /success:
+    get:
+      summary: Returns 200 OK
+      description: Always returns 200 OK
+      responses:
+        '200':
+          description: OK
+  /internal:
+    get:
+      summary: Returns 500 Internal Server Error
+      description: Always returns 500 Internal Server Error
+      responses:
+        '500':
+          description: Internal Server Error
+  /random:
+    post:
+      summary: Returns random status
+      description: Returns 200 OK, 500 Internal Server Error, or panics with 20% probability
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+  /swagger:
+    get:
+      summary: Swagger UI
+      description: Serves Swagger UI
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    Quiz:
+      type: object
+      properties:
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Answer'
+    Answer:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+    QuizAnswers:
+      type: object
+      additionalProperties:
+        type: string
+    QuizResult:
+      type: object
+      properties:
+        correctAnswers:
+          type: integer
+        totalQuestions:
+          type: integer
+        percentile:
+          type: number
+          format: float
